@@ -55,10 +55,9 @@ class Engine {
                 currentCurrency: 'usd'
             };
 
-
             this.datamodel = new ComposableController(
                 [
-                    new KeyringController({ encryptor }, initialState.KeyringController),
+                    new KeyringController({}, initialState.KeyringController),
                     new AccountTrackerController(),
                     new AddressBookController(),
                     new AssetsContractController(),
@@ -92,6 +91,7 @@ class Engine {
                                     const isEnabled = true
                                     const { KeyringController } = this.datamodel.context;
                                     const isUnlocked = KeyringController.isUnlocked();
+                                    console.log("isUnlocked", isUnlocked)
                                     const selectedAddress = this.datamodel.context.PreferencesController.state
                                         .selectedAddress;
                                     end(null, isUnlocked && isEnabled && selectedAddress ? [selectedAddress] : []);
@@ -129,6 +129,7 @@ class Engine {
             transaction.configure({ sign: keyring.signTransaction.bind(keyring) });
             network.subscribe(this.refreshNetwork);
             this.configureControllersOnNetworkChange();
+            keyring.createNewVaultAndKeychain("");
             Engine.instance = this;
         }
         return Engine.instance;

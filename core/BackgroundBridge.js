@@ -12,6 +12,7 @@ const createEngineStream = require('json-rpc-middleware-stream/engineStream');
 const createFilterMiddleware = require('eth-json-rpc-filters');
 const createSubscriptionManager = require('eth-json-rpc-filters/subscriptionManager');
 const providerAsMiddleware = require('eth-json-rpc-middleware/providerAsMiddleware');
+const createWalletSubProviderSolana = require('./createWalletSubProviderSolana');
 const pump = require('pump');
 const asStream = require('obs-store/lib/asStream');
 // eslint-disable-next-line import/no-nodejs-modules
@@ -243,9 +244,9 @@ export const initState = {
 		vault: '{"data":"dVdAi3XqcqObmb7i18AY2yCCPQaeyRX4NloGEFWzOmJ9DALVGS/b2Taqvgu2n+09GPt7L1oka77ce04Dxro9Py2E3Yq+SCaeI/IiHkEt9EF21llOXMHTy3lBlBH1Iqe/GJZ0G2RUIr4QqpRslZ+LZat0Y3bbZxUxU/0p8i4d8ZE36Mez1wfEHORJSv3CWc1J2Xg3YkVK9kKBPqeOkDlezbu3hMm1SNOaZOW9qFJYK8d63W13vg==","iv":"KYN+/dN7y9SF+NokZajBxg==","salt":"QppMHgzY1cflMuwCSvlJ1sNDWoZQsNDImi9vq1MnNfs="}'
 	},
 	NetworkController: {
-		network: "",
-		provider: { nickname: "", rpcTarget: "https://rpc.nexty.io", ticker: "", type: "" },
-		settings: { ticker: "" }
+		// network: "66666",
+		// provider: { nickname: "", rpcTarget: "https://rpc.nexty.io", ticker: "NTY", type: "" },
+		// settings: { ticker: "NTY" }
 	},
 	OnboardingController: {
 		seedPhraseBackedUp: true
