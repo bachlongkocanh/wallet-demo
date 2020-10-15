@@ -15,11 +15,13 @@ import { ethErrors } from 'eth-json-rpc-errors';
 import Engine from '../core/Engine';
 import URL from 'url-parse';
 import ApprovalDialog from './approvalDialog';
-import Signature from './signature-verifier';
+import Signature, { getPublicKey, signData, signTx, toParams } from './signature-verifier';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { util } from '@metamask/controllers'
 import Web3 from 'web3';
-import createWalletSubProviderSolana from '../core/createWalletSubProviderSolana'
+import createWalletSubProviderSolana from '../core/createWalletSubProviderSolana';
+const bs58 = require('bs58');
+
 
 "https://getthebid.io/games/cards/1"
 let uri = "https://app.uniswap.org/#/swap"
@@ -43,7 +45,7 @@ export default class Web extends Component {
         currentPageTitle: '',
         currentPageUrl: '',
         currentPageIcon: undefined,
-        selectedAddress: "4uh66Z6uUHtHcoxTKhmqU1mgYCpk84i9Urpb4vu8sogB",
+        selectedAddress: "GsRkztvAasMJpPh6tbHSprtrhXHeKAcwY9amJkVPs9ww",
         url: null,
         newPageData: {},
         fullHostname: '',
@@ -69,6 +71,8 @@ export default class Web extends Component {
     backgroundListener() {
         InteractionManager.runAfterInteractions(() => {
             Engine.context.TransactionController.hub.on('unapprovedTransaction', this.onUnapprovedTransaction);
+
+            Engine.context.TransactionController.hub.on('unapprovedTransactionSOL', this.onUnapprovedTransactionSOL);
 
             Engine.context.MessageManager.hub.on('unapprovedMessage', messageParams => {
                 console.log("unapprovedMessage", messageParams)
@@ -122,6 +126,14 @@ export default class Web extends Component {
         const cleanMessageParams = await PersonalMessageManager.approveMessage(messageParams);
         let rawSig = this.SIGNATURE.signMessage(cleanMessageParams, "408864a9a3a164dadeab70d4a5fbedfd42ce5085dc655f6dac8cec14b136b19a", KeyringController);
         PersonalMessageManager.setMessageStatusSigned(messageId, rawSig);
+    }
+
+    onUnapprovedTransactionSOL = async transactionMeta => {
+        console.log("onUnapprovedTransactionSOL", transactionMeta)
+        const signTx = await this.signTxSOL(transactionMeta.transaction, transactionMeta.origin);
+        const transaction = { ...transactionMeta, ...signTx }
+        console.log("transaction", transaction)
+        this.SIGNATURE.signTransactionSOL(transaction)
     }
 
     onUnapprovedTransaction = async transactionMeta => {
@@ -230,6 +242,16 @@ export default class Web extends Component {
         current?.reload();
     }
 
+    goForward = () => {
+        const { current } = this.webview;
+        current && current.goForward && current.goForward();
+    }
+
+    goBack = () => {
+        const { current } = this.webview;
+        current && current.goBack && current.goBack();
+    }
+
     initializeBackgroundBridge = (url, isMainFrame) => {
         const newBridge = new BackgroundBridge({
             webview: this.webview,
@@ -271,7 +293,7 @@ export default class Web extends Component {
                     const { params } = req;
                     console.log("wallet_requestAccountssss", params);
                     if (((!params || !params.force))) {
-                        res.result = [selectedAddress.toLowerCase()];
+                        res.result = [selectedAddress];
                     }
                 },
                 wallet_sendDomainMetadata: () => {
@@ -280,16 +302,36 @@ export default class Web extends Component {
                 wallet_accounts: () => {
                     const { params } = req;
                     if (((!params || !params.force))) {
-                        res.result = [selectedAddress.toLowerCase()];
+                        res.result = [selectedAddress];
                     }
                 },
                 wallet_sendTransaction: () => {
+                    console.log("send tx")
                     const encodedTx = req.params.message || {}
                     const wireTx = bs58.decode(encodedTx)
                     const tx = Transaction.from(wireTx)
                     const signature = null
                     res.result = signature
                     res.id = req.id
+                },
+                wallet_signTransaction: async () => {
+                    console.log("sign tx");
+                    const { TransactionController } = Engine.context;
+                    try {
+                        const hash = await (await TransactionController.addTransactionSOL(
+                            req?.params?.message,
+                            req?.origin
+                        )).result;
+                        console.log("hasssssshhhhh", hash)
+                        res.result = {
+                            signature: hash.signature,
+                            publicKey: hash.publicKey
+                        }
+                        res.id = req.id
+                    } catch (error) {
+                        console.log("error", error)
+                    }
+
                 },
                 wallet_sign: async () => {
                     console.log("wallet_sign", req.params)
@@ -526,7 +568,31 @@ export default class Web extends Component {
             await rpcMethods[req.method]();
         });
     }
+    signTxSOL2 = (req) => new Promise(async (resolve, reject) => {
+        const msgParams = {
+            ... await toParams(req.params.message, this.state.selectedAddress),
+            origin: req.messageorigin
+        }
+        const signature = await signTx(req.params.message)
+        const publicKey = await getPublicKey(this.state.selectedAddress)
+        resolve({ signature, publicKey })
+    })
 
+    signTxSOL = (message, origin) => new Promise(async (resolve, reject) => {
+        const msgParams = {
+            ... await toParams(message, this.state.selectedAddress),
+            origin: origin
+        }
+        console.log("msgParams", msgParams);
+        const signature = await signTx(message)
+        const publicKey = await getPublicKey(this.state.selectedAddress)
+        console.log("signature", signature, "publicKey", publicKey)
+        let result = {
+            signature: bs58.encode(Buffer.from(signature)),
+            publicKey: bs58.encode(Buffer.from(publicKey)),
+        }
+        resolve(result)
+    })
 
     webview = React.createRef();
     onLoadProgress = () => {
@@ -553,6 +619,7 @@ export default class Web extends Component {
             this.initializeBackgroundBridge(origin, true)
         }
     }
+
 
     webviewUrlPostMessagePromiseResolve = null;
 
@@ -783,10 +850,22 @@ export default class Web extends Component {
             >
                 <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                     <TouchableOpacity
+                        onPress={this.goBack}
+                        style={{ borderWidth: 1, backgroundColor: "red" }}
+                    >
+                        <Text>Back</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={this.reload}
                         style={{ borderWidth: 1, backgroundColor: "red" }}
                     >
                         <Text>Reload</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={this.goForward}
+                        style={{ borderWidth: 1, backgroundColor: "red" }}
+                    >
+                        <Text>Forward</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={this.chooseNexty}

@@ -18,7 +18,7 @@ import {
     TransactionController,
     TypedMessageManager,
     NetworkType
-} from '@metamask/controllers';
+} from '@ezdefi/controllers';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Encryptor from './Encryptor';
