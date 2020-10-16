@@ -17,7 +17,7 @@ import URL from 'url-parse';
 import ApprovalDialog from './approvalDialog';
 import Signature, { getPublicKey, signData, signTx, toParams } from './signature-verifier';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { util } from '@metamask/controllers'
+import { util } from '@ezdefi/controllers'
 import Web3 from 'web3';
 import createWalletSubProviderSolana from '../core/createWalletSubProviderSolana';
 const bs58 = require('bs58');
@@ -27,11 +27,11 @@ const bs58 = require('bs58');
 let uri = "https://app.uniswap.org/#/swap"
 uri = "https://citizen.poc.me/login";
 // uri = "https://js-eth-sign.surge.sh";
-// uri = "https://www.kyberswap.com/swap"
+uri = "https://www.kyberswap.com/swap"
 // uri = "http://moon-exchange.herokuapp.com/"
 // uri = "https://bonfireeth.github.io/Bonfire-15-I/?utm_source=StateOfTheDApps"
 // uri = "https://app.compound.finance/"
-uri = "http://localhost:3000/"
+// uri = "http://localhost:3000/"
 // uri = "http://192.168.1.124:3000"
 
 

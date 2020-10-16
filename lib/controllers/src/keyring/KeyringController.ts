@@ -443,7 +443,7 @@ export class KeyringController extends BaseController<KeyringConfig, KeyringStat
           const keyringAccounts = await keyring.getAccounts();
           const accounts = Array.isArray(keyringAccounts)
             ? keyringAccounts.map((address) => toChecksumAddress(address))
-            : /* istanbul ignore next */ [];
+            : /* istanbul ignore next */[];
           return {
             accounts,
             index,

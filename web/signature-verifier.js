@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import Web3 from 'web3';
-import { util } from '@metamask/controllers';
+import { util } from '@ezdefi/controllers';
 import Engine from '../core/Engine';
 import { sign } from '@warren-bank/ethereumjs-tx-sign';
 import { Connection, Account, PublicKey, SystemProgram, Transaction, SystemInstruction, Message } from '@solana/web3.js';

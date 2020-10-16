@@ -110,12 +110,6 @@
 
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
-import {
-  ComposableController,
-  NetworkStatusController,
-  TokenRatesController
-} from '@metamask/controllers';
-
 export default class componentName extends Component {
   render() {
     return (

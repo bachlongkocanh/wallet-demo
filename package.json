@@ -21,7 +21,6 @@
   "dependencies": {
     "@binance-chain/javascript-sdk": "^4.1.0",
     "@ezdefi/controllers": "file:lib/controllers",
-    "@metamask/controllers": "^3.0.0",
     "@project-serum/serum": "^0.13.3",
     "@react-native-community/async-storage": "^1.12.0",
     "@solana/web3.js": "^0.71.9",
@@ -95,6 +94,7 @@
     "@react-native-community/eslint-config": "^1.1.0",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
+    "eth-contract-metadata": "^1.11.0",
     "jest": "^25.1.0",
     "metro-react-native-babel-preset": "^0.59.0",
     "react-test-renderer": "16.13.1",

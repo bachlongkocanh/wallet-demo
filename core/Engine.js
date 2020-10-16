@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Encryptor from './Encryptor';
 import { toChecksumAddress } from 'ethereumjs-util';
 import Networks from './networks';
-import contractMap from 'eth-contract-metadata';
+import contractMap from 'eth-contract-metadata'
 
 // const OPENSEA_API_KEY = process.env.MM_OPENSEA_KEY;
 const encryptor = new Encryptor();
