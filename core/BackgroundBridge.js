@@ -12,7 +12,6 @@ const createEngineStream = require('json-rpc-middleware-stream/engineStream');
 const createFilterMiddleware = require('eth-json-rpc-filters');
 const createSubscriptionManager = require('eth-json-rpc-filters/subscriptionManager');
 const providerAsMiddleware = require('eth-json-rpc-middleware/providerAsMiddleware');
-const createWalletSubProviderSolana = require('./createWalletSubProviderSolana');
 const pump = require('pump');
 const asStream = require('obs-store/lib/asStream');
 // eslint-disable-next-line import/no-nodejs-modules
@@ -166,13 +165,14 @@ export class BackgroundBridge extends EventEmitter {
 		// subset of state for metamask inpage provider
 		const publicConfigStore = new ObservableStore();
 
-		const selectPublicState = ({ isUnlocked, network }) => {
-			const networkType = Engine.context.NetworkController.state.provider.type;
-			const chainId = Object.keys(NetworkList).indexOf(networkType) > -1 && NetworkList[networkType].chainId;
+		const selectPublicState = ({ isUnlocked, selectedAddress, network }) => {
+			const chainId = network ? `0x${parseInt(network, 10).toString(16)}` : network
 			const result = {
 				isUnlocked,
 				networkVersion: network,
-				chainId: chainId ? `0x${parseInt(chainId, 10).toString(16)}` : null
+				chainId,
+				selectedAddress,
+				isEnabled: true,
 			};
 			return result;
 		};
@@ -207,12 +207,13 @@ export class BackgroundBridge extends EventEmitter {
 	 */
 	getState() {
 		const vault = Engine.context.KeyringController.state.vault;
-		const { network, selectedAddress } = Engine.datamodel.flatState;
+		const { network, selectedAddress, provider } = Engine.datamodel.flatState;
 		return {
 			isInitialized: !!vault,
 			isUnlocked: true,
 			network,
 			selectedAddress,
+			chainId: provider.chainId
 		};
 	}
 }
@@ -244,9 +245,9 @@ export const initState = {
 		vault: '{"data":"dVdAi3XqcqObmb7i18AY2yCCPQaeyRX4NloGEFWzOmJ9DALVGS/b2Taqvgu2n+09GPt7L1oka77ce04Dxro9Py2E3Yq+SCaeI/IiHkEt9EF21llOXMHTy3lBlBH1Iqe/GJZ0G2RUIr4QqpRslZ+LZat0Y3bbZxUxU/0p8i4d8ZE36Mez1wfEHORJSv3CWc1J2Xg3YkVK9kKBPqeOkDlezbu3hMm1SNOaZOW9qFJYK8d63W13vg==","iv":"KYN+/dN7y9SF+NokZajBxg==","salt":"QppMHgzY1cflMuwCSvlJ1sNDWoZQsNDImi9vq1MnNfs="}'
 	},
 	NetworkController: {
-		// network: "66666",
-		// provider: { nickname: "", rpcTarget: "https://rpc.nexty.io", ticker: "NTY", type: "" },
-		// settings: { ticker: "NTY" }
+		network: "66666",
+		provider: { nickname: "", rpcTarget: "https://rpc.nexty.io", ticker: "NTY", type: "" },
+		settings: { ticker: "NTY" }
 	},
 	OnboardingController: {
 		seedPhraseBackedUp: true
@@ -271,7 +272,7 @@ export const initState = {
 		preferences: {
 			useNativeCurrencyAsPrimaryCurrency: true
 		},
-		selectedAddress: "0x7c0C79776E463f1a7da96a0aFF325743Dd3D7082",
+		selectedAddress: null,
 		suggestedTokens: {},
 		tokens: [],
 		useBlockie: false

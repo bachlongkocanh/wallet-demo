@@ -33,7 +33,7 @@ export function createLoggerMiddleware(opts) {
 				const { error, ...resWithoutError } = res;
 				if (error && error.message !== REJECTED_TRANSACTION_ERROR) {
 					// Logger.error(error, { message: 'Error in RPC response', res: resWithoutError });
-					console.error("error: Error in RPC response", resWithoutError);
+					console.warn("error: Error in RPC response", error, resWithoutError);
 				}
 			}
 			if (req.isMetamaskInternal) {

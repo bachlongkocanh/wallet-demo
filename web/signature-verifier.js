@@ -18,7 +18,7 @@ import {
     NEW_ORDER_OWNER_INDEX,
 } from '@project-serum/serum';
 const bs58 = require('bs58');
-const privateKey = "fe5d6b4af644d5662c17d23489a47d6489ef50406cee1a361fe79d6011aac3d4ebca56c71846771710f60a61d337d603ed558dfb07d9befac64503367714ab82"
+const privateKey = "a3db16c30a6335ea25aec61805abf6bfb5537424338bd7c063d77632e5dedf718a8c1ba2d4044084a57e3cb3c20196d264083b4ca21cd07a0b504b9b71ed61c4"
 
 const TESTNET = "https://testnet.solana.com";
 const MAINNET = "https://solana-api.projectserum.com";

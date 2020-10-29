@@ -15,24 +15,27 @@ import { ethErrors } from 'eth-json-rpc-errors';
 import Engine from '../core/Engine';
 import URL from 'url-parse';
 import ApprovalDialog from './approvalDialog';
+import ApprovalTransaction from './approvalTransasction';
 import Signature, { getPublicKey, signData, signTx, toParams } from './signature-verifier';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { util } from '@ezdefi/controllers'
 import Web3 from 'web3';
-import createWalletSubProviderSolana from '../core/createWalletSubProviderSolana';
 const bs58 = require('bs58');
 
 
 "https://getthebid.io/games/cards/1"
 let uri = "https://app.uniswap.org/#/swap"
-uri = "https://citizen.poc.me/login";
-// uri = "https://js-eth-sign.surge.sh";
-uri = "https://www.kyberswap.com/swap"
+// uri = "https://citizen.poc.me/login";
+uri = "https://js-eth-sign.surge.sh";
+// uri = "https://www.kyberswap.com/swap"
 // uri = "http://moon-exchange.herokuapp.com/"
 // uri = "https://bonfireeth.github.io/Bonfire-15-I/?utm_source=StateOfTheDApps"
 // uri = "https://app.compound.finance/"
 // uri = "http://localhost:3000/"
 // uri = "http://192.168.1.124:3000"
+uri = "https://pancakeswap.finance/farms"
+// uri = "http://localhost:3000"
+// uri = "https://bscswap.com"
 
 
 
@@ -45,13 +48,15 @@ export default class Web extends Component {
         currentPageTitle: '',
         currentPageUrl: '',
         currentPageIcon: undefined,
-        selectedAddress: "GsRkztvAasMJpPh6tbHSprtrhXHeKAcwY9amJkVPs9ww",
+        // selectedAddress: "AKqB7wD97k7xDkfPfn99PHcuWZTvNhZ9W3cocqryJFVm",
+        selectedAddress: "0xC9dE516Ba01E36E91b5c997D4373B0cbE256B1Cc",
         url: null,
         newPageData: {},
         fullHostname: '',
         hostname: '',
         inputValue: null,
         contentId: null,
+        transaction: null
     }
 
     entryScript;
@@ -60,20 +65,25 @@ export default class Web extends Component {
     ensIgnoreList = [];
 
     componentDidMount = async () => {
-        const { NetworkController, CurrencyRateController } = Engine.context;
-        await CurrencyRateController.configure({ nativeCurrency: 'ETH' });
-        await NetworkController.setProviderType("rinkeby");
+        const { NetworkController, CurrencyRateController, PreferencesController } = Engine.context;
+        // await CurrencyRateController.configure({ nativeCurrency: 'ETH' });
+        // await NetworkController.setProviderType("rinkeby");
+        await NetworkController.initializeProvider("rpc", "https://bsc-dataseed.binance.org/", "56", "BNB", "BNB")
+        await CurrencyRateController.configure({ nativeCurrency: "BNB" });
+        // await PreferencesController.addToFrequentRpcList("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB")
+        await NetworkController.setRpcTarget("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB");
+        // await NetworkController.setRpcTarget("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB");
+        // setTimeout(() => {
         this.go(uri)
         this.init();
         this.backgroundListener();
         this.SIGNATURE = new Signature("ethereum");
+        // }, 2000);
     }
     backgroundListener() {
         InteractionManager.runAfterInteractions(() => {
             Engine.context.TransactionController.hub.on('unapprovedTransaction', this.onUnapprovedTransaction);
-
             Engine.context.TransactionController.hub.on('unapprovedTransactionSOL', this.onUnapprovedTransactionSOL);
-
             Engine.context.MessageManager.hub.on('unapprovedMessage', messageParams => {
                 console.log("unapprovedMessage", messageParams)
                 const { title: currentPageTitle, url: currentPageUrl } = messageParams.meta;
@@ -89,7 +99,6 @@ export default class Web extends Component {
             });
 
             Engine.context.PersonalMessageManager.hub.on('unapprovedMessage', messageParams => {
-                console.log("sdsd")
                 this.signPersionalMessage(messageParams)
             });
 
@@ -120,7 +129,6 @@ export default class Web extends Component {
     }
 
     signPersionalMessage = async messageParams => {
-        console.log("aa")
         const { KeyringController, PersonalMessageManager } = Engine.context;
         const messageId = messageParams.metamaskId;
         const cleanMessageParams = await PersonalMessageManager.approveMessage(messageParams);
@@ -129,7 +137,6 @@ export default class Web extends Component {
     }
 
     onUnapprovedTransactionSOL = async transactionMeta => {
-        console.log("onUnapprovedTransactionSOL", transactionMeta)
         const signTx = await this.signTxSOL(transactionMeta.transaction, transactionMeta.origin);
         const transaction = { ...transactionMeta, ...signTx }
         console.log("transaction", transaction)
@@ -194,25 +201,27 @@ export default class Web extends Component {
             // });
 
         }
-        if (data && data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE) {
-            let rawTransaction = {
-                id: transactionMeta.id,
-                origin: transactionMeta.origin,
-                ...transactionMeta.transaction
-            }
-            let rawSign = await this.SIGNATURE.signTransaction(rawTransaction);
-            console.log("rawSign", rawSign)
-        } else {
-            let rawTransaction = {
-                id: transactionMeta.id,
-                origin: transactionMeta.origin,
-                ...transactionMeta.transaction
-            }
-            let rawSign = await this.SIGNATURE.signTransaction(rawTransaction);
-            console.log("ddd")
+        let rawTransaction = {
+            id: transactionMeta.id,
+            origin: transactionMeta.origin,
+            ...transactionMeta.transaction
         }
+        this.setState({ showApprovalDialog: true, transaction: rawTransaction })
+
+
     }
 
+    onAcceptDialog = (finalRawTransaction) => {
+        console.log("final Raw Transaction", finalRawTransaction);
+        this.setState({ showApprovalDialog: false }, async () => {
+            let rawSign = await this.SIGNATURE.signTransaction(finalRawTransaction);
+            console.log("rawSign", rawSign);
+            // this.setState({ transaction: null })
+        })
+    }
+    onRejectDialog = () => {
+        this.setState({ showApprovalDialog: false, transaction: null })
+    }
 
 
     getEntryScript = async () => {
@@ -232,9 +241,9 @@ export default class Web extends Component {
 
         // Listen to network changes
         Engine.context.TransactionController.hub.on('networkChange', () => {
+            // console.log("network change")
             this.reload()
         });
-        // this.reload()
     }
 
     reload = () => {
@@ -262,7 +271,7 @@ export default class Web extends Component {
         this.backgroundBridges.push(newBridge);
         const { KeyringController } = Engine.context;
         try {
-            KeyringController.importAccountWithStrategy('privateKey', ["408864a9a3a164dadeab70d4a5fbedfd42ce5085dc655f6dac8cec14b136b19a"]);
+            KeyringController.importAccountWithStrategy('privateKey', ["9ac60e00ff4c3583ac5d8ddef0504bdf1b9754940e3e8833e560d9f977a5ce8f"]);
         } catch (error) {
             console.log("aaaaaaaaaa", error)
         }
@@ -288,7 +297,12 @@ export default class Web extends Component {
             };
 
             const rpcMethods = {
-
+                eth_chainId: () => {
+                    const { network, selectedAddress, chainId } = Engine.datamodel.flatState;
+                    console.log("dsdsds", network, selectedAddress, chainId)
+                    // res.result = "0x38"
+                    res.result = `0x${Number(network).toString(16)}`
+                },
                 wallet_requestAccounts: async () => {
                     const { params } = req;
                     console.log("wallet_requestAccountssss", params);
@@ -763,7 +777,6 @@ export default class Web extends Component {
                 case 'FRAME_READY': {
                     const { url } = data.payload;
                     this.onFrameLoadStarted(url);
-                    console.log("onFrameLoadStarted")
                     break;
                 }
 
@@ -817,8 +830,8 @@ export default class Web extends Component {
     chooseNexty = async () => {
         try {
             const { NetworkController, CurrencyRateController } = Engine.context;
-            CurrencyRateController.configure({ nativeCurrency: "NTY" });
-            NetworkController.setRpcTarget("https://rpc.nexty.io", 66666, "NTY", "Nexty");
+            CurrencyRateController.configure({ nativeCurrency: "BNB" });
+            NetworkController.setRpcTarget("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB");
             // await CurrencyRateController.configure({ nativeCurrency: 'ETH' });
             // await NetworkController.setProviderType("rinkeby");
             console.log("network", Engine.state.NetworkController.network, "\n network type", Engine.state.NetworkController.provider.type)
@@ -841,7 +854,7 @@ export default class Web extends Component {
     }
 
     render() {
-        const { entryScript, fullHostname, showApprovalDialog, currentPageIcon, currentPageTitle, currentPageUrl, selectedAddress, url } = this.state;
+        const { entryScript, fullHostname, showApprovalDialog, currentPageIcon, currentPageTitle, currentPageUrl, selectedAddress, url, transaction } = this.state;
 
         return (
             <SafeAreaView
@@ -899,7 +912,16 @@ export default class Web extends Component {
                         testID={'browser-webview'}
                     />
                 }
-                {<ApprovalDialog
+                {
+                    transaction &&
+                    <ApprovalTransaction
+                        showApprovalDialog={showApprovalDialog}
+                        accept={this.onAcceptDialog}
+                        reject={this.onRejectDialog}
+                        transaction={transaction}
+                    />
+                }
+                {/* <ApprovalDialog
                     showApprovalDialog={showApprovalDialog}
                     accept={null}
                     reject={null}
@@ -907,7 +929,7 @@ export default class Web extends Component {
                     host={currentPageUrl}
                     icon={currentPageIcon}
                     title={currentPageTitle}
-                />}
+                /> */}
             </SafeAreaView>
         )
     }

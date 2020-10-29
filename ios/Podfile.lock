@@ -70,37 +70,37 @@ PODS:
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
-  - Permission-BluetoothPeripheral (2.1.5):
+  - Permission-BluetoothPeripheral (2.2.2):
     - RNPermissions
-  - Permission-Calendars (2.1.5):
+  - Permission-Calendars (2.2.2):
     - RNPermissions
-  - Permission-Camera (2.1.5):
+  - Permission-Camera (2.2.2):
     - RNPermissions
-  - Permission-Contacts (2.1.5):
+  - Permission-Contacts (2.2.2):
     - RNPermissions
-  - Permission-FaceID (2.1.5):
+  - Permission-FaceID (2.2.2):
     - RNPermissions
-  - Permission-LocationAlways (2.1.5):
+  - Permission-LocationAlways (2.2.2):
     - RNPermissions
-  - Permission-LocationWhenInUse (2.1.5):
+  - Permission-LocationWhenInUse (2.2.2):
     - RNPermissions
-  - Permission-MediaLibrary (2.1.5):
+  - Permission-MediaLibrary (2.2.2):
     - RNPermissions
-  - Permission-Microphone (2.1.5):
+  - Permission-Microphone (2.2.2):
     - RNPermissions
-  - Permission-Motion (2.1.5):
+  - Permission-Motion (2.2.2):
     - RNPermissions
-  - Permission-Notifications (2.1.5):
+  - Permission-Notifications (2.2.2):
     - RNPermissions
-  - Permission-PhotoLibrary (2.1.5):
+  - Permission-PhotoLibrary (2.2.2):
     - RNPermissions
-  - Permission-Reminders (2.1.5):
+  - Permission-Reminders (2.2.2):
     - RNPermissions
-  - Permission-Siri (2.1.5):
+  - Permission-Siri (2.2.2):
     - RNPermissions
-  - Permission-SpeechRecognition (2.1.5):
+  - Permission-SpeechRecognition (2.2.2):
     - RNPermissions
-  - Permission-StoreKit (2.1.5):
+  - Permission-StoreKit (2.2.2):
     - RNPermissions
   - RCTRequired (0.63.2)
   - RCTTypeSafety (0.63.2):
@@ -268,22 +268,22 @@ PODS:
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
   - React-jsinspector (0.63.2)
-  - react-native-aes (1.3.9):
-    - React
-  - react-native-camera (3.37.0):
-    - React
-    - react-native-camera/RCT (= 3.37.0)
-    - react-native-camera/RN (= 3.37.0)
-  - react-native-camera/RCT (3.37.0):
-    - React
-  - react-native-camera/RN (3.37.0):
-    - React
+  - react-native-aes (1.3.10):
+    - React-Core
+  - react-native-camera (3.40.0):
+    - React-Core
+    - react-native-camera/RCT (= 3.40.0)
+    - react-native-camera/RN (= 3.40.0)
+  - react-native-camera/RCT (3.40.0):
+    - React-Core
+  - react-native-camera/RN (3.40.0):
+    - React-Core
   - react-native-randombytes (3.5.3):
     - React
   - react-native-udp (2.7.0):
     - React
-  - react-native-webview (10.8.2):
-    - React
+  - react-native-webview (10.9.2):
+    - React-Core
   - react-native-webview-forked (7.0.5):
     - React
   - React-RCTActionSheet (0.63.2):
@@ -354,8 +354,8 @@ PODS:
     - React
   - RNOS (1.2.6):
     - React
-  - RNPermissions (2.1.5):
-    - React
+  - RNPermissions (2.2.2):
+    - React-Core
   - TcpSockets (3.3.2):
     - React
   - Yoga (1.14.0)
@@ -420,7 +420,7 @@ DEPENDENCIES:
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-udp (from `../node_modules/react-native-udp`)
   - react-native-webview (from `../node_modules/react-native-webview`)
-  - react-native-webview-forked (from `../lib/react-native-webview-forked`)
+  - react-native-webview-forked (from `../node_modules/react-native-webview-forked`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -528,7 +528,7 @@ EXTERNAL SOURCES:
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   react-native-webview-forked:
-    :path: "../lib/react-native-webview-forked"
+    :path: "../node_modules/react-native-webview-forked"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -581,22 +581,22 @@ SPEC CHECKSUMS:
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
-  Permission-BluetoothPeripheral: b28267800e6bbedf18768e2bda7ebed3cf7a1a81
-  Permission-Calendars: 1a0a2ec124d9d184dca9403ce13d236b32c2e6d7
-  Permission-Camera: 53d46bd722aea28d796e20f05fb3cbe6cde6ccb6
-  Permission-Contacts: 3cb117c072db53e26393962b02086dd7ab3bb901
-  Permission-FaceID: 14d400f5a123fdd4ffa5cc3691568e8e97438153
-  Permission-LocationAlways: 14ec76aa2912ea3a7ddc5b564d781bff51a5f3c8
-  Permission-LocationWhenInUse: 16ecd20d82341c6b4336dfe5520c098bea85a2f5
-  Permission-MediaLibrary: c01c27f2e5c8a499fdc4add8fc7f1b97dcb3340e
-  Permission-Microphone: af45e35013788b52eecf3cd8f13185c4b6f7bff7
-  Permission-Motion: 3ce9ebdb992f3da3e9ab3fe18c44d4d491a267ce
-  Permission-Notifications: 5ecb0f433b585c5621dc30b168772d60ae8574c2
-  Permission-PhotoLibrary: 3400b260e5f80e0dd9c04d00c2ceab233bf88427
-  Permission-Reminders: ac694d618f77347754af15fb9bff9362f36161cf
-  Permission-Siri: 3028a9f8663241e30d99021cf163e171715ce612
-  Permission-SpeechRecognition: 844dc75f7165ff00bc0714bedd1c2bd42d6fa076
-  Permission-StoreKit: 92c982c7b36258ef5e878ac7803e2afa47f10d49
+  Permission-BluetoothPeripheral: 73e80c434beef6570ba7c322a6882a8d46c2c4d3
+  Permission-Calendars: 17bb6a871acc7580754be7b56cfb25537e1b57de
+  Permission-Camera: 5d2aaf95592660b6dcb5e8d1d90ed5d0156cad02
+  Permission-Contacts: 295b2f26e7607801e73b0fd35a56ec63cfd52dc4
+  Permission-FaceID: 8f034a57c60ed8c602d184f485a9bd524c0f98b7
+  Permission-LocationAlways: 700dfb730b07b24a84f8c173b93ad816d71d3dc8
+  Permission-LocationWhenInUse: 871e81c06c1fc578353fce962d5d8e6efa697f1a
+  Permission-MediaLibrary: e94e0a30ec5edc18b14e9df10fc78d5bb592a8ca
+  Permission-Microphone: a0e56790d61392c31627df33328fef079ad46fa8
+  Permission-Motion: c3e2cca72df50994fb55031bc611dbe99dfbed46
+  Permission-Notifications: 9c6b5cc4f0e6599e9fc3395b77cebddc48f1be41
+  Permission-PhotoLibrary: 8227a6ed9f6a971537afe63742d54f5f23a38fe2
+  Permission-Reminders: f1bddb60953645830289f9b00977b11e2b62fbf8
+  Permission-Siri: c50c434a91af15ed47fe2b5b2fb705d567ba1d77
+  Permission-SpeechRecognition: 1598784f0122a9e3af62a37b18468450ea03fa12
+  Permission-StoreKit: 43b6a94351b1ffc24f48a814c1396d6d5712e41d
   RCTRequired: f13f25e7b12f925f1f6a6a8c69d929a03c0129fe
   RCTTypeSafety: 44982c5c8e43ff4141eb519a8ddc88059acd1f3a
   React: e1c65dd41cb9db13b99f24608e47dd595f28ca9a
@@ -607,11 +607,11 @@ SPEC CHECKSUMS:
   React-jsi: 54245e1d5f4b690dec614a73a3795964eeef13a8
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
-  react-native-aes: ff31f0dd4c791eb423a631ee04570fcf3c618924
-  react-native-camera: 1f19162f082db0b7c73280699b70319bf1e2e16d
-  react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
-  react-native-udp: ccbd878f0f3b968217fc7e3d5eb5839fcaab8b6c
-  react-native-webview: 5c41ea867f6928bea865bd49a2d379161d6643e9
+  react-native-aes: c6e4e3ffcff410535e31e161fca95d50e608d4ee
+  react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
+  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
+  react-native-udp: ff9d13e523f2b58e6bc5d4d32321ac60671b5dc9
+  react-native-webview: 4e96d493f9f90ba4f03b28933f30b2964df07e39
   react-native-webview-forked: 30ecda2456675d54273c274a5d659faad44b17ad
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
@@ -623,15 +623,15 @@ SPEC CHECKSUMS:
   React-RCTText: 1b6773e776e4b33f90468c20fe3b16ca3e224bb8
   React-RCTVibration: 4d2e726957f4087449739b595f107c0d4b6c2d2d
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
-  RNCAsyncStorage: 3eea36d9460c5159b592f9ecbe5a77f8aca98006
+  RNCAsyncStorage: 2a692bcb9b69b76a2f1a95f33db057129700af64
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNPermissions: 1888705aebcc81714efa5dbff94351e4388ae012
-  TcpSockets: 8d839b9b14f6f344d98e4642ded13ab3112b462d
+  RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
+  TcpSockets: 14306fb79f9750ea7d2ddd02d8bed182abb01797
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6379749b06a45a4851f57b6dccd2011328346edd
+PODFILE CHECKSUM: ac665c2098b20a6f22cf4a80311af3242f7b13e3
 
 COCOAPODS: 1.9.1
