@@ -26,14 +26,14 @@ const bs58 = require('bs58');
 "https://getthebid.io/games/cards/1"
 let uri = "https://app.uniswap.org/#/swap"
 // uri = "https://citizen.poc.me/login";
-uri = "https://js-eth-sign.surge.sh";
+// uri = "https://js-eth-sign.surge.sh";
 // uri = "https://www.kyberswap.com/swap"
 // uri = "http://moon-exchange.herokuapp.com/"
 // uri = "https://bonfireeth.github.io/Bonfire-15-I/?utm_source=StateOfTheDApps"
 // uri = "https://app.compound.finance/"
 // uri = "http://localhost:3000/"
 // uri = "http://192.168.1.124:3000"
-uri = "https://pancakeswap.finance/farms"
+// uri = "https://pancakeswap.finance/farms"
 // uri = "http://localhost:3000"
 // uri = "https://bscswap.com"
 
@@ -66,12 +66,12 @@ export default class Web extends Component {
 
     componentDidMount = async () => {
         const { NetworkController, CurrencyRateController, PreferencesController } = Engine.context;
-        // await CurrencyRateController.configure({ nativeCurrency: 'ETH' });
-        // await NetworkController.setProviderType("rinkeby");
-        await NetworkController.initializeProvider("rpc", "https://bsc-dataseed.binance.org/", "56", "BNB", "BNB")
-        await CurrencyRateController.configure({ nativeCurrency: "BNB" });
+        await CurrencyRateController.configure({ nativeCurrency: 'ETH' });
+        await NetworkController.setProviderType("mainnet");
+        // await NetworkController.initializeProvider("rpc", "https://bsc-dataseed.binance.org/", "56", "BNB", "BNB")
+        // await CurrencyRateController.configure({ nativeCurrency: "BNB" });
         // await PreferencesController.addToFrequentRpcList("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB")
-        await NetworkController.setRpcTarget("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB");
+        // await NetworkController.setRpcTarget("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB");
         // await NetworkController.setRpcTarget("https://bsc-dataseed.binance.org/", "56", "BNB", "BNB");
         // setTimeout(() => {
         this.go(uri)
@@ -301,7 +301,7 @@ export default class Web extends Component {
                     const { network, selectedAddress, chainId } = Engine.datamodel.flatState;
                     console.log("dsdsds", network, selectedAddress, chainId)
                     // res.result = "0x38"
-                    res.result = `0x${Number(network).toString(16)}`
+                    res.result = `0x${Number(1).toString(16)}`
                 },
                 wallet_requestAccounts: async () => {
                     const { params } = req;

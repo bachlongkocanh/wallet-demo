@@ -34,20 +34,20 @@ let refreshing = false;
  * and exposing convenience methods for common wallet operations.
  */
 class Engine {
-	/**
-	 * ComposableController reference containing all child controllers
-	 */
+    /**
+     * ComposableController reference containing all child controllers
+     */
     datamodel;
 
-	/**
-	 * Object containing the info for the latest incoming tx block
-	 * for each address and network
-	 */
+    /**
+     * Object containing the info for the latest incoming tx block
+     * for each address and network
+     */
     lastIncomingTxBlockInfo;
 
-	/**
-	 * Creates a CoreController instance
-	 */
+    /**
+     * Creates a CoreController instance
+     */
     constructor(initialState = {}) {
         if (!Engine.instance) {
             const { nativeCurrency, currentCurrency } = initialState.CurrencyRateController || {
@@ -153,9 +153,9 @@ class Engine {
         AssetsDetectionController.detectAssets();
     }
 
-	/**
-	 * Refreshes all controllers that depend on the network
-	 */
+    /**
+     * Refreshes all controllers that depend on the network
+     */
     refreshNetwork = () => {
         if (!refreshing) {
             refreshing = true;
